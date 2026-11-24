@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Pocket Pal Settings</title>
+  <link rel="stylesheet" href="options.css" />
+</head>
+<body>
+  <div class="wrap">
+    <header class="header">
+      <img src="../assets/icons/icon48.png" alt="" />
+      <div>
+        <h1>Pocket Pal</h1>
+        <p>Settings &amp; customization</p>
+      </div>
+    </header>
+
+    <nav class="nav">
+      <button class="nav-btn active" data-section="general">General</button>
+      <button class="nav-btn" data-section="behavior">Behaviour</button>
+      <button class="nav-btn" data-section="characters">Characters</button>
+      <button class="nav-btn" data-section="accessories">Outfits &amp; style</button>
+      <button class="nav-btn" data-section="custom">Custom models</button>
+      <button class="nav-btn" data-section="sites">Site exceptions</button>
+    </nav>
+
+    <main>
+      <section class="section" id="section-general">
+        <h2>General</h2>
+        <div class="row inline">
+          <label>Enable Pocket Pal everywhere</label>
+          <label class="switch"><input type="checkbox" id="enabled" /><span class="slider"></span></label>
+        </div>
+        <div class="row">
+          <label for="scale">Character size <span class="val" id="scale-val"></span></label>
+          <input type="range" id="scale" min="0.6" max="1.8" step="0.05" />
+        </div>
+        <div class="row">
+          <label for="shadowIntensity">Shadow intensity <span class="val" id="shadow-val"></span></label>
+          <input type="range" id="shadowIntensity" min="0" max="1" step="0.05" />
+        </div>
+        <div class="row inline">
+          <label>Sound effects</label>
+          <label class="switch"><input type="checkbox" id="soundEnabled" /><span class="slider"></span></label>
+        </div>
+        <div class="row inline">
+          <label>Reduced motion</label>
+          <label class="switch"><input type="checkbox" id="reducedMotion" /><span class="slider"></span></label>
+        </div>
+        <button class="danger-btn" id="btn-reset">Reset all settings to defaults</button>
+      </section>
+
+      <section class="section hidden" id="section-behavior">
+        <h2>Behaviour</h2>
+        <div class="row">
+          <label for="behavior">Movement behaviour</label>
+          <select id="behavior">
+            <option value="wander">Wander freely</option>
+            <option value="followCursor">Follow cursor</option>
+            <option value="avoidCursor">Avoid cursor</option>
+            <option value="stationary">Stay put</option>
+          </select>
+        </div>
+        <div class="row">
+          <label for="walkSpeed">Walking speed <span class="val" id="walkSpeed-val"></span></label>
+          <input type="range" id="walkSpeed" min="0.4" max="2" step="0.05" />
+        </div>
+        <div class="row">
+          <label for="animSpeed">Animation speed <span class="val" id="animSpeed-val"></span></label>
+          <input type="range" id="animSpeed" min="0.4" max="2" step="0.05" />
+        </div>
+        <div class="row">
+          <label for="autoSleepMinutes">Auto-sleep after inactivity <span class="val" id="autoSleep-val"></span></label>
+          <input type="range" id="autoSleepMinutes" min="0" max="30" step="1" />
+          <p class="hint">0 disables auto-sleep.</p>
+        </div>
+        <div class="row">
+          <label for="interactionSensitivity">Interaction sensitivity <span class="val" id="sensitivity-val"></span></label>
+          <input type="range" id="interactionSensitivity" min="0.5" max="2" step="0.05" />
+          <p class="hint">Higher sensitivity needs a shorter press to drag or open the menu.</p>
+        </div>
+        <div class="row inline">
+          <label>Window hopping <small class="hint">Hops between the corners of the window</small></label>
+          <label class="switch"><input type="checkbox" id="windowHopping" /><span class="slider"></span></label>
+        </div>
+        <div class="row inline">
+          <label>Page awareness <small class="hint">Reacts to scrolling and page changes</small></label>
+          <label class="switch"><input type="checkbox" id="pageAwareness" /><span class="slider"></span></label>
+        </div>
+        <div class="row inline">
+          <label>Remember position <small class="hint">Keeps its spot when you switch tabs</small></label>
+          <label class="switch"><input type="checkbox" id="rememberPosition" /><span class="slider"></span></label>
+        </div>
+        <div class="row inline">
+          <label>Page interaction <small class="hint">Sits on headings, images and the search box, and peeks out from screen edges</small></label>
+          <label class="switch"><input type="checkbox" id="pageInteraction" /><span class="slider"></span></label>
+        </div>
+        <div class="row inline">
+          <label>Idle animations <small class="hint">Waves, yawns and sneezes now and then</small></label>
+          <label class="switch"><input type="checkbox" id="idleAnimations" /><span class="slider"></span></label>
+        </div>
+        <div class="row">
+          <label for="petCount">Pals on screen</label>
+          <select id="petCount">
+            <option value="1">Just one</option>
+            <option value="2">Two</option>
+            <option value="3">Three</option>
+          </select>
+          <p class="hint">Extra pals are the next unlocked ones in the roster.</p>
+        </div>
+        <div class="row inline">
+          <label>Pals play together <small class="hint">They chase each other, say hi and nap side by side</small></label>
+          <label class="switch"><input type="checkbox" id="petInteractions" /><span class="slider"></span></label>
+        </div>
+        <div class="row">
+          <label for="trail">Floating trail</label>
+          <select id="trail">
+            <option value="sparkles">Sparkles</option>
+            <option value="bubbles">Bubbles</option>
+            <option value="hearts">Hearts</option>
+            <option value="none">None</option>
+          </select>
+        </div>
+        <div class="row">
+          <label for="seasonal">Seasonal looks</label>
+          <select id="seasonal">
+            <option value="auto">Automatic (Santa hat in December, ghost sheet around Halloween)</option>
+            <option value="off">Off</option>
+            <option value="santa">Always Santa hat</option>
+            <option value="ghost">Always ghost sheet</option>
+          </select>
+        </div>
+        <p class="hint">Tip: use the right-click menu or the popup for Play catch. Drag and throw the ball and your pals will chase it.</p>
+        <p class="hint">Tip: press Alt+Shift+P (change it at chrome://extensions/shortcuts) to hide or show your pal on every tab.</p>
+      </section>
+
+      <section class="section hidden" id="section-characters">
+        <h2>Characters</h2>
+        <div class="chips" id="category-chips"></div>
+        <div class="gallery" id="gallery"></div>
+      </section>
+
+      <section class="section hidden" id="section-accessories">
+        <h2>Outfits &amp; style</h2>
+        <div class="row">
+          <label for="animationStyle">Animation style</label>
+          <select id="animationStyle">
+            <option value="float">Floating</option>
+            <option value="walk">Walking</option>
+            <option value="bounce">Bouncing</option>
+          </select>
+          <p class="hint">Floating drifts around the whole window, walking glides smoothly along the bottom line, bouncing gets around purely by jumping.</p>
+        </div>
+        <h3>Outfits</h3>
+        <p class="hint">One tap to dress your pal up. You can still mix and match below.</p>
+        <div class="chips" id="outfit-chips"></div>
+        <h3>Accessories</h3>
+        <p class="hint">Pick pieces for the active pal — one head item, one face item and one neck item at a time.</p>
+        <div class="accessory-list" id="accessory-list"></div>
+        <p class="hint" id="outfit-note"></p>
+      </section>
+
+      <section class="section hidden" id="section-custom">
+        <h2>Custom models</h2>
+        <p class="hint">
+          Upload your own glTF/GLB character. It keeps whatever animation clips it ships with
+          (named like "walk", "idle", "jump", …) and Pocket Pal plays the best match for each
+          behaviour; without matching clips it will still move, sit and jump, just without
+          per-limb animation.
+        </p>
+        <input type="file" id="custom-upload" accept=".glb,.gltf,model/gltf-binary,model/gltf+json" />
+        <div id="custom-list" class="custom-list"></div>
+      </section>
+
+      <section class="section hidden" id="section-sites">
+        <h2>Site exceptions</h2>
+        <p class="hint">Pocket Pal is hidden on these sites. Remove one to bring it back.</p>
+        <div id="site-list" class="site-list"></div>
+      </section>
+    </main>
+  </div>
+  <script src="../libs/three/three.min.js"></script>
+  <script src="../libs/three/GLTFLoader.js"></script>
+  <script src="../utils/helpers.js"></script>
+  <script src="../utils/storage.js"></script>
+  <script src="../characters/registry.js"></script>
+  <script src="../characters/accessories.js"></script>
+  <script src="options.js"></script>
+</body>
+</html>

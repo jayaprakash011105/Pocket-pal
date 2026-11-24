@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Pocket Pal</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <div class="app">
+    <nav class="tabs">
+      <button class="tab active" data-tab="home">Home</button>
+      <button class="tab" data-tab="characters">Characters</button>
+      <button class="tab" data-tab="settings">Settings</button>
+    </nav>
+
+    <section class="panel" id="panel-home">
+      <div class="brand">
+        <img src="../assets/icons/icon48.png" alt="" class="logo" />
+        <div>
+          <div class="brand-name">Pocket Pal</div>
+          <div class="brand-sub">Your browser companion</div>
+        </div>
+      </div>
+
+      <div class="card preview-card">
+        <img id="preview-img" class="preview-canvas" alt="" />
+        <div class="preview-info">
+          <div class="preview-name" id="current-name">Mochi</div>
+          <div class="preview-tag" id="current-tag">A playful kitty</div>
+        </div>
+      </div>
+
+      <div class="card toggle-card">
+        <div class="toggle-label">
+          <span>Pocket Pal</span>
+          <span class="toggle-sub" id="status-text">Active on this page</span>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="enabled-toggle" />
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div class="quick-actions">
+        <button class="action-btn" id="btn-play">👋 Play</button>
+        <button class="action-btn" id="btn-dance">💃 Dance</button>
+        <button class="action-btn" id="btn-sleep">💤 Sleep</button>
+        <button class="action-btn" id="btn-hop">🪂 Hop</button>
+      </div>
+      <div class="quick-actions">
+        <button class="action-btn" id="btn-ball">⚽ Catch</button>
+        <button class="action-btn" id="btn-wave">🙋 Wave</button>
+        <button class="action-btn" id="btn-perch">🪑 Perch</button>
+        <button class="action-btn" id="btn-peek">🫣 Peek</button>
+      </div>
+
+      <button class="link-btn" id="btn-hide-now">Hide for now (Alt+Shift+P)</button>
+      <button class="link-btn" id="btn-hide-site">Hide on this site</button>
+    </section>
+
+    <section class="panel hidden" id="panel-characters">
+      <div class="section-title">Choose your pal</div>
+      <div class="gallery" id="gallery"></div>
+    </section>
+
+    <section class="panel hidden" id="panel-settings">
+      <div class="section-title">Settings</div>
+
+      <div class="setting-row">
+        <label for="scale">Character size</label>
+        <input type="range" id="scale" min="0.6" max="1.8" step="0.05" />
+      </div>
+      <div class="setting-row">
+        <label for="walkSpeed">Movement speed</label>
+        <input type="range" id="walkSpeed" min="0.4" max="2" step="0.05" />
+      </div>
+      <div class="setting-row">
+        <label for="behavior">Behaviour</label>
+        <select id="behavior">
+          <option value="wander">Wander freely</option>
+          <option value="followCursor">Follow cursor</option>
+          <option value="avoidCursor">Avoid cursor</option>
+          <option value="stationary">Stay put</option>
+        </select>
+      </div>
+      <div class="setting-row">
+        <label for="animationStyle">Animation style</label>
+        <select id="animationStyle">
+            <option value="float">Floating</option>
+            <option value="walk">Walking</option>
+            <option value="bounce">Bouncing</option>
+          </select>
+      </div>
+      <div class="setting-row">
+        <label for="petCount">Pals on screen</label>
+        <select id="petCount">
+          <option value="1">Just one</option>
+          <option value="2">Two</option>
+          <option value="3">Three</option>
+        </select>
+      </div>
+      <div class="setting-row inline">
+        <label for="sound">Sound effects</label>
+        <input type="checkbox" id="sound" />
+      </div>
+      <div class="setting-row inline">
+        <label for="reducedMotion">Reduced motion</label>
+        <input type="checkbox" id="reducedMotion" />
+      </div>
+      <button class="link-btn" id="btn-open-options">More settings &amp; accessories →</button>
+    </section>
+
+    <footer class="footer">
+      <span id="unlock-progress"></span>
+    </footer>
+  </div>
+  <script src="../libs/three/three.min.js"></script>
+  <script src="../utils/helpers.js"></script>
+  <script src="../utils/storage.js"></script>
+  <script src="../characters/registry.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

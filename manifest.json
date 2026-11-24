@@ -1,0 +1,64 @@
+{
+  "manifest_version": 3,
+  "name": "Pocket Pal — Interactive 3D Browser Companion",
+  "version": "1.0.0",
+  "description": "A cute animated 3D creature that lives on your webpages — walks, reacts to your cursor, and plays with you.",
+  "icons": {
+    "16": "assets/icons/icon16.png",
+    "48": "assets/icons/icon48.png",
+    "128": "assets/icons/icon128.png"
+  },
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_icon": {
+      "16": "assets/icons/icon16.png",
+      "48": "assets/icons/icon48.png",
+      "128": "assets/icons/icon128.png"
+    }
+  },
+  "options_ui": {
+    "page": "options/options.html",
+    "open_in_tab": true
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "commands": {
+    "toggle-hidden": {
+      "suggested_key": { "default": "Alt+Shift+P" },
+      "description": "Hide or show Pocket Pal"
+    }
+  },
+  "permissions": ["storage", "unlimitedStorage"],
+  "host_permissions": ["http://*/*", "https://*/*"],
+  "content_scripts": [
+    {
+      "matches": ["http://*/*", "https://*/*"],
+      "exclude_matches": [
+        "https://chrome.google.com/webstore/*",
+        "https://chromewebstore.google.com/*"
+      ],
+      "all_frames": false,
+      "run_at": "document_idle",
+      "js": [
+        "libs/three/three.min.js",
+        "libs/three/GLTFLoader.js",
+        "utils/helpers.js",
+        "utils/storage.js",
+        "characters/registry.js",
+        "characters/accessories.js",
+        "characters/effects.js",
+        "content/physics.js",
+        "content/movement.js",
+        "content/interactions.js",
+        "content/character-manager.js",
+        "content/effects.js",
+        "content/snowfall.js",
+        "content/perch.js",
+        "content/minigames.js",
+        "content/pet-engine.js",
+        "content/content.js"
+      ]
+    }
+  ]
+}
