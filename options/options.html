@@ -20,6 +20,7 @@
       <button class="nav-btn" data-section="behavior">Behaviour</button>
       <button class="nav-btn" data-section="characters">Characters</button>
       <button class="nav-btn" data-section="accessories">Outfits &amp; style</button>
+      <button class="nav-btn" data-section="christmas">Christmas</button>
       <button class="nav-btn" data-section="custom">Custom models</button>
       <button class="nav-btn" data-section="sites">Site exceptions</button>
     </nav>
@@ -124,10 +125,10 @@
         <div class="row">
           <label for="seasonal">Seasonal looks</label>
           <select id="seasonal">
-            <option value="auto">Automatic (Santa hat in December, ghost sheet around Halloween)</option>
+            <option value="auto">Automatic (Snow in December, Halloween Oct 20 – Nov 2)</option>
             <option value="off">Off</option>
-            <option value="santa">Always Santa hat</option>
-            <option value="ghost">Always ghost sheet</option>
+            <option value="santa">Always Snow (Santa hat + snowfall)</option>
+            <option value="ghost">Always Halloween (ghost sheet)</option>
           </select>
         </div>
         <p class="hint">Tip: use the right-click menu or the popup for Play catch. Drag and throw the ball and your pals will chase it.</p>
@@ -158,6 +159,121 @@
         <p class="hint">Pick pieces for the active pal — one head item, one face item and one neck item at a time.</p>
         <div class="accessory-list" id="accessory-list"></div>
         <p class="hint" id="outfit-note"></p>
+      </section>
+
+      <section class="section hidden" id="section-christmas">
+        <h2>Christmas theme</h2>
+        <p class="hint">A living winter wonderland on every page: falling snow that piles up along the bottom, a sleigh, a snowman game and a little snowplow. Switch the theme on here or from the Themes tab of the toolbar popup.</p>
+        <div class="row inline">
+          <label>Christmas theme <small class="hint">Turns the whole environment on</small></label>
+          <label class="switch"><input type="checkbox" data-xmas="enabled" /><span class="slider"></span></label>
+        </div>
+
+        <h3>Snow</h3>
+        <div class="row inline">
+          <label>Falling snowflakes <small class="hint">On by default</small></label>
+          <label class="switch"><input type="checkbox" data-xmas="snowfall" /><span class="slider"></span></label>
+        </div>
+        <div class="row inline">
+          <label>Snow builds up at the bottom <small class="hint">On by default</small></label>
+          <label class="switch"><input type="checkbox" data-xmas="accumulation" /><span class="slider"></span></label>
+        </div>
+
+        <h3>Extras</h3>
+        <p class="hint">Each one works on its own.</p>
+        <div class="row inline">
+          <label>Santa's sleigh and reindeer <small class="hint">Flies across now and then</small></label>
+          <label class="switch"><input type="checkbox" data-xmas="sleigh" /><span class="slider"></span></label>
+        </div>
+        <div class="row inline">
+          <label>Snowman building game <small class="hint">Roll snowballs from the snow with your mouse (Christmas button, bottom left)</small></label>
+          <label class="switch"><input type="checkbox" data-xmas="snowman" /><span class="slider"></span></label>
+        </div>
+        <div class="row inline">
+          <label>Snowplow <small class="hint">Drives along the bottom and clears the snow</small></label>
+          <label class="switch"><input type="checkbox" data-xmas="cleaner" /><span class="slider"></span></label>
+        </div>
+        <div class="row inline">
+          <label>Christmas decorations <small class="hint">Trees, lights, stars and more</small></label>
+          <label class="switch"><input type="checkbox" data-xmas="decorations" /><span class="slider"></span></label>
+        </div>
+        <div class="row inline">
+          <label>Show my pals <small class="hint">Turn off for just the scenery, without any pals</small></label>
+          <label class="switch"><input type="checkbox" data-xmas="pets" /><span class="slider"></span></label>
+        </div>
+        <div class="row inline">
+          <label>Pals wear a Santa hat</label>
+          <label class="switch"><input type="checkbox" data-xmas="hat" /><span class="slider"></span></label>
+        </div>
+        <div class="row inline">
+          <label>Sound effects <small class="hint">Jingle bells, plow and gift sounds</small></label>
+          <label class="switch"><input type="checkbox" data-xmas="sound" /><span class="slider"></span></label>
+        </div>
+
+        <h3>Decorations</h3>
+        <p class="hint">Only used while Christmas decorations are on.</p>
+        <div class="row inline">
+          <label>Snowy trees</label>
+          <label class="switch"><input type="checkbox" data-xmas-deco="trees" /><span class="slider"></span></label>
+        </div>
+        <div class="row inline">
+          <label>String lights</label>
+          <label class="switch"><input type="checkbox" data-xmas-deco="lights" /><span class="slider"></span></label>
+        </div>
+        <div class="row inline">
+          <label>Hanging stars</label>
+          <label class="switch"><input type="checkbox" data-xmas-deco="stars" /><span class="slider"></span></label>
+        </div>
+        <div class="row inline">
+          <label>Ornaments</label>
+          <label class="switch"><input type="checkbox" data-xmas-deco="ornaments" /><span class="slider"></span></label>
+        </div>
+        <div class="row inline">
+          <label>Gift boxes</label>
+          <label class="switch"><input type="checkbox" data-xmas-deco="gifts" /><span class="slider"></span></label>
+        </div>
+        <div class="row inline">
+          <label>Shooting stars</label>
+          <label class="switch"><input type="checkbox" data-xmas-deco="shootingStars" /><span class="slider"></span></label>
+        </div>
+        <div class="row inline">
+          <label>Sparkles</label>
+          <label class="switch"><input type="checkbox" data-xmas-deco="sparkles" /><span class="slider"></span></label>
+        </div>
+
+        <h3>Fine tuning</h3>
+        <div class="row">
+          <label>Snowfall density <span class="val" data-xmas-val="density"></span></label>
+          <input type="range" data-xmas-range="density" min="0.1" max="1" step="0.05" />
+        </div>
+        <div class="row">
+          <label>Snowflake speed <span class="val" data-xmas-val="speed"></span></label>
+          <input type="range" data-xmas-range="speed" min="0.4" max="2" step="0.05" />
+        </div>
+        <div class="row">
+          <label>Wind <span class="val" data-xmas-val="wind"></span></label>
+          <input type="range" data-xmas-range="wind" min="0" max="1" step="0.05" />
+        </div>
+        <div class="row">
+          <label>Snow build-up speed <span class="val" data-xmas-val="accumSpeed"></span></label>
+          <input type="range" data-xmas-range="accumSpeed" min="0.3" max="3" step="0.1" />
+        </div>
+        <div class="row">
+          <label>Snowplow speed <span class="val" data-xmas-val="cleanerSpeed"></span></label>
+          <input type="range" data-xmas-range="cleanerSpeed" min="0.3" max="3" step="0.1" />
+        </div>
+        <div class="row">
+          <label>Sound volume <span class="val" data-xmas-val="volume"></span></label>
+          <input type="range" data-xmas-range="volume" min="0" max="1" step="0.05" />
+        </div>
+        <div class="row">
+          <label for="xmas-quality">Animation quality</label>
+          <select id="xmas-quality" data-xmas-select="quality">
+            <option value="low">Low (best for slower computers)</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+          </select>
+        </div>
       </section>
 
       <section class="section hidden" id="section-custom">

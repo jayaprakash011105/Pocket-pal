@@ -13,6 +13,7 @@
 }
 
 .pp-canvas {
+  z-index: 100;
   position: absolute;
   inset: 0;
   width: 100%;
@@ -22,6 +23,7 @@
 }
 
 .pp-hitbox {
+  z-index: 200;
   position: absolute;
   pointer-events: auto;
   cursor: pointer;
@@ -30,6 +32,7 @@
 }
 
 .pp-ball-hit {
+  z-index: 220;
   position: absolute;
   display: none;
   pointer-events: auto;
@@ -44,6 +47,7 @@
 }
 
 .pp-bubble {
+  z-index: 210;
   position: absolute;
   pointer-events: none;
   transform: translate(-50%, -100%);

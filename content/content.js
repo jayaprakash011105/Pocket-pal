@@ -2,7 +2,7 @@
   if (window.__pocketPalInjected) return;
   window.__pocketPalInjected = true;
 
-  const { Utils, Storage, PetEngine, CharacterManager, Movement, Interactions, Perch, Minigames, Effects, Snowfall, Accessories } = window.PocketPal;
+  const { Utils, Storage, PetEngine, CharacterManager, Movement, Interactions, Perch, Minigames, Effects, Snowfall, Accessories, Christmas } = window.PocketPal;
 
   if (Utils.isRestrictedUrl(location.href)) return;
 
@@ -15,6 +15,7 @@
   let shadowMesh = null;
   let ballGame = null;
   let snow = null;
+  let xmas = null; // the Christmas theme manager while that theme is on
   let manifestCache = null;
   const pets = []; // pets[0] is the one picked in settings; the rest are companions
   let pointer = { x: window.innerWidth / 2, y: window.innerHeight / 2, active: false };
@@ -42,6 +43,10 @@
       snow.dispose();
       snow = null;
     }
+    if (xmas) {
+      xmas.dispose();
+      xmas = null;
+    }
     if (engine) engine.dispose();
     engine = null;
     host.remove();
@@ -65,7 +70,12 @@
 
   // 'auto' follows the calendar (Santa hat in December, ghost sheet around
   // Halloween); the setting can also force one on or switch them off.
+  const christmasOn = () => !!(state && state.settings.christmas && state.settings.christmas.enabled);
+  // "Show my pals" in the Christmas settings: off leaves just the scenery.
+  const petsHidden = () => christmasOn() && state.settings.christmas.pets === false;
+
   function currentSeason() {
+    if (christmasOn()) return state.settings.christmas.hat === false ? 'none' : 'santa';
     const choice = (state && state.settings.seasonal) || 'auto';
     if (choice === 'off') return 'none';
     if (choice === 'santa' || choice === 'ghost') return choice;
@@ -444,11 +454,34 @@
           if (pos) restorePosition(pos);
           engine.start(tick);
           rebuildCompanions();
+          syncChristmas();
         };
         if (state.settings.rememberPosition) Storage.getPosition().then(startLoop);
         else startLoop(null);
       });
     });
+  }
+
+  // ---- Christmas theme ---------------------------------------------------------
+
+  function syncChristmas() {
+    if (!engine || !Christmas || !Christmas.createManager) return;
+    if (christmasOn() && !xmas) {
+      xmas = Christmas.createManager({
+        stage,
+        getChristmas: () => state.settings.christmas,
+        getBounds: () => ({ width: engine.width, height: engine.height }),
+        getScale: () => state.settings.scale,
+        reducedMotion: () => !!state.settings.reducedMotion || Utils.prefersReducedMotion(),
+        getPets: () => (petsHidden() ? [] : pets.map((p) => ({ id: p.brain.id, name: p.def.name, def: p.def, brain: p.brain, instance: p.instance }))),
+        saveChristmas: (patch) => Storage.set({ settings: { christmas: patch } }),
+      });
+    } else if (!christmasOn() && xmas) {
+      xmas.dispose();
+      xmas = null;
+    } else if (xmas) {
+      xmas.applySettings();
+    }
   }
 
   // ---- Multi-tab persistence ----------------------------------------------
@@ -546,7 +579,21 @@
     const chase = ballGame ? ballGame.update(dt, pets) : null;
     const perch = settings.pageInteraction !== false ? perchFinder : null;
     const season = currentSeason();
-    if (snow) snow.update(dt, { enabled: season === 'santa', width: bounds.width, height: bounds.height });
+    if (snow) snow.update(dt, { enabled: season === 'santa' && !christmasOn(), width: bounds.width, height: bounds.height });
+    if (xmas) xmas.update(dt);
+    const hidden = petsHidden();
+    pets.forEach((p) => {
+      p.instance.group.visible = !hidden;
+      p.hitbox.style.display = hidden ? 'none' : '';
+      if (hidden) {
+        p.bubble.classList.remove('pp-visible');
+        if (p.trail) p.trail.update(dt, p.brain.body, { enabled: false });
+      }
+    });
+    if (hidden) {
+      if (shadowMesh) shadowMesh.visible = false;
+      return;
+    }
     const roster = pets.map((p) => ({ id: p.brain.id, name: p.def.name, body: p.brain.body, brain: p.brain, state: p.brain.state }));
 
     pets.forEach((pet, i) => {
@@ -617,6 +664,10 @@
       snow.dispose();
       snow = null;
     }
+    if (xmas) {
+      xmas.dispose();
+      xmas = null;
+    }
     if (engine) engine.dispose();
     engine = null;
     host.remove();
@@ -630,6 +681,7 @@
     const styleChanged = state && next.settings.animationStyle !== state.settings.animationStyle;
     const seasonChanged = state && next.settings.seasonal !== state.settings.seasonal;
     const countChanged = state && next.settings.petCount !== state.settings.petCount;
+    const christmasChanged = state && JSON.stringify(next.settings.christmas) !== JSON.stringify(state.settings.christmas);
     state = next;
 
     if (!willRun && wasRunning) {
@@ -651,7 +703,8 @@
       if (accessoriesChanged && lead) lead.instance.setAccessories(state.settings.accessories);
       if (countChanged) rebuildCompanions();
     }
-    if (styleChanged || seasonChanged) pets.forEach(applyLook);
+    if (christmasChanged) syncChristmas();
+    if (styleChanged || seasonChanged || christmasChanged) pets.forEach(applyLook);
     pets.forEach((p) => p.instance.setScale(state.settings.scale));
   }
 

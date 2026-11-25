@@ -76,6 +76,7 @@
     let social = null; // { mode: 'greet'|'chase'|'flee'|'join', otherId, timer }
     let lastSocialEnd = -99;
     let pendingPeek = false;
+    let arriveCb = null; // one-shot callback for goTo()
     let ceilingTimer = 0;
     let easeBoost = false;
     let clock = 0;
@@ -111,6 +112,7 @@
 
     // Drops whatever multi-frame plan is running (used by interruptions).
     function cancelPlans() {
+      arriveCb = null;
       wanderTarget = null;
       hopWalk = null;
       roam = null;
@@ -216,10 +218,32 @@
         body.vx = 0;
         decisionTimer = Math.min(decisionTimer, randomRange(0.3, 1.0));
         if (peekPlan && peekPlan.phase === 'go') beginPeekShow();
+        fireArrive();
         return;
       }
       // Ease off over the last stretch so the pet glides to a stop.
       body.vx = Math.sign(dx) * wanderSpeed * clamp(Math.abs(dx) / 90, 0.25, 1);
+    }
+
+    function fireArrive() {
+      if (!arriveCb) return;
+      const cb = arriveCb;
+      arriveCb = null;
+      cb();
+    }
+
+    // Walk (or drift, or hop) to x and call back on arrival. Returns false when
+    // the pal is busy (dragged, asleep, climbing, perched, mid-hop).
+    function goTo(x, onArrive) {
+      if (dragging || hopTween || perch || climbPhase || state === 'sleep') return false;
+      const minX = lastFootOffset + 30;
+      const maxX = Math.max(minX, lastBounds.width - lastFootOffset - 30);
+      const tx = clamp(x, minX, maxX);
+      cancelPlans();
+      arriveCb = onArrive || null;
+      if (body.surface === 'air') startRoam({ x: tx, y: body.y });
+      else startGroundWalk(tx);
+      return true;
     }
 
     // Floating style: drift to a random spot anywhere in the window.
@@ -251,6 +275,7 @@
         decisionTimer = randomRange(1.2, 3);
         if (peekPlan && peekPlan.phase === 'go') beginPeekShow();
         else setState('idle');
+        fireArrive();
         return;
       }
       const speed = Math.min(100 * personality.speed, dist * 1.1 + 14);
@@ -282,6 +307,7 @@
         decisionTimer = randomRange(0.8, 2);
         if (peekPlan && peekPlan.phase === 'go') beginPeekShow();
         else setState('idle');
+        fireArrive();
         return;
       }
       h.remaining -= 1;
@@ -1220,6 +1246,7 @@
       setDragging,
       reactOnce,
       jump,
+      goTo,
       special,
       forceSleep,
       reactToScroll,

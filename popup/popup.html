@@ -2,122 +2,172 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Pocket Pal</title>
   <link rel="stylesheet" href="popup.css" />
 </head>
 <body>
   <div class="app">
-    <nav class="tabs">
-      <button class="tab active" data-tab="home">Home</button>
-      <button class="tab" data-tab="characters">Characters</button>
-      <button class="tab" data-tab="settings">Settings</button>
-    </nav>
-
-    <section class="panel" id="panel-home">
+    <header class="topbar">
       <div class="brand">
         <img src="../assets/icons/icon48.png" alt="" class="logo" />
-        <div>
+        <div class="brand-text">
           <div class="brand-name">Pocket Pal</div>
-          <div class="brand-sub">Your browser companion</div>
+          <div class="brand-sub"><span class="dot" id="status-dot"></span><span id="status-text">Active on this page</span></div>
         </div>
       </div>
+      <label class="switch" title="Turn Pocket Pal on or off everywhere">
+        <input type="checkbox" id="enabled-toggle" />
+        <span class="slider"></span>
+      </label>
+    </header>
 
-      <div class="card preview-card">
-        <img id="preview-img" class="preview-canvas" alt="" />
-        <div class="preview-info">
-          <div class="preview-name" id="current-name">Mochi</div>
-          <div class="preview-tag" id="current-tag">A playful kitty</div>
+    <main class="views">
+      <!-- Home -->
+      <section class="panel" id="panel-home">
+        <div class="hero">
+          <div class="hero-stage"><canvas id="hero-canvas" aria-hidden="true"></canvas></div>
+          <div class="hero-info">
+            <div class="hero-name" id="current-name">Mochi</div>
+            <div class="hero-tag" id="current-tag">A playful kitty</div>
+            <div class="pills">
+              <span class="pill" id="pill-theme">Classic</span>
+              <span class="pill ghost" id="pill-style">Floating</span>
+            </div>
+          </div>
         </div>
-      </div>
 
-      <div class="card toggle-card">
-        <div class="toggle-label">
-          <span>Pocket Pal</span>
-          <span class="toggle-sub" id="status-text">Active on this page</span>
+        <div class="card progress-card">
+          <div class="progress-top">
+            <span class="progress-title">Unlock progress</span>
+            <span class="progress-count" id="unlock-count"></span>
+          </div>
+          <div class="bar"><i id="unlock-bar"></i></div>
+          <div class="progress-note" id="unlock-progress"></div>
         </div>
-        <label class="switch">
-          <input type="checkbox" id="enabled-toggle" />
-          <span class="slider"></span>
-        </label>
-      </div>
 
-      <div class="quick-actions">
-        <button class="action-btn" id="btn-play">👋 Play</button>
-        <button class="action-btn" id="btn-dance">💃 Dance</button>
-        <button class="action-btn" id="btn-sleep">💤 Sleep</button>
-        <button class="action-btn" id="btn-hop">🪂 Hop</button>
-      </div>
-      <div class="quick-actions">
-        <button class="action-btn" id="btn-ball">⚽ Catch</button>
-        <button class="action-btn" id="btn-wave">🙋 Wave</button>
-        <button class="action-btn" id="btn-perch">🪑 Perch</button>
-        <button class="action-btn" id="btn-peek">🫣 Peek</button>
-      </div>
+        <div class="section-label">Quick actions</div>
+        <div class="actions-grid">
+          <button class="qa" id="btn-play"><span class="qa-icon">👋</span><span>Play</span></button>
+          <button class="qa" id="btn-dance"><span class="qa-icon">💃</span><span>Dance</span></button>
+          <button class="qa" id="btn-sleep"><span class="qa-icon">💤</span><span>Sleep</span></button>
+          <button class="qa" id="btn-wave"><span class="qa-icon">🙋</span><span>Wave</span></button>
+          <button class="qa" id="btn-hop"><span class="qa-icon">🪂</span><span>Hop</span></button>
+          <button class="qa" id="btn-perch"><span class="qa-icon">🪑</span><span>Perch</span></button>
+          <button class="qa" id="btn-peek"><span class="qa-icon">🫣</span><span>Peek</span></button>
+          <button class="qa accent" id="btn-ball"><span class="qa-icon">⚽</span><span>Catch</span></button>
+        </div>
 
-      <button class="link-btn" id="btn-hide-now">Hide for now (Alt+Shift+P)</button>
-      <button class="link-btn" id="btn-hide-site">Hide on this site</button>
-    </section>
+        <div class="footer-actions">
+          <button class="soft-btn" id="btn-hide-now">Hide for now</button>
+          <button class="soft-btn" id="btn-hide-site">Hide on this site</button>
+        </div>
+      </section>
 
-    <section class="panel hidden" id="panel-characters">
-      <div class="section-title">Choose your pal</div>
-      <div class="gallery" id="gallery"></div>
-    </section>
+      <!-- Characters -->
+      <section class="panel hidden" id="panel-characters">
+        <div class="panel-head">
+          <h2>Choose your pal</h2>
+          <p id="char-count">14 pals</p>
+        </div>
+        <div class="chips" id="char-filters"></div>
+        <div class="gallery" id="gallery"></div>
+      </section>
 
-    <section class="panel hidden" id="panel-settings">
-      <div class="section-title">Settings</div>
+      <!-- Themes -->
+      <section class="panel hidden" id="panel-themes">
+        <div class="panel-head">
+          <h2>Themes</h2>
+          <p>Dress up <b id="theme-pal">your pal</b> with a one-tap look</p>
+        </div>
+        <div class="season-banner" id="season-banner"></div>
+        <div class="theme-grid" id="theme-grid"></div>
+      </section>
 
-      <div class="setting-row">
-        <label for="scale">Character size</label>
-        <input type="range" id="scale" min="0.6" max="1.8" step="0.05" />
-      </div>
-      <div class="setting-row">
-        <label for="walkSpeed">Movement speed</label>
-        <input type="range" id="walkSpeed" min="0.4" max="2" step="0.05" />
-      </div>
-      <div class="setting-row">
-        <label for="behavior">Behaviour</label>
-        <select id="behavior">
-          <option value="wander">Wander freely</option>
-          <option value="followCursor">Follow cursor</option>
-          <option value="avoidCursor">Avoid cursor</option>
-          <option value="stationary">Stay put</option>
-        </select>
-      </div>
-      <div class="setting-row">
-        <label for="animationStyle">Animation style</label>
-        <select id="animationStyle">
-            <option value="float">Floating</option>
-            <option value="walk">Walking</option>
-            <option value="bounce">Bouncing</option>
-          </select>
-      </div>
-      <div class="setting-row">
-        <label for="petCount">Pals on screen</label>
-        <select id="petCount">
-          <option value="1">Just one</option>
-          <option value="2">Two</option>
-          <option value="3">Three</option>
-        </select>
-      </div>
-      <div class="setting-row inline">
-        <label for="sound">Sound effects</label>
-        <input type="checkbox" id="sound" />
-      </div>
-      <div class="setting-row inline">
-        <label for="reducedMotion">Reduced motion</label>
-        <input type="checkbox" id="reducedMotion" />
-      </div>
-      <button class="link-btn" id="btn-open-options">More settings &amp; accessories →</button>
-    </section>
+      <!-- Settings -->
+      <section class="panel hidden" id="panel-settings">
+        <div class="panel-head">
+          <h2>Settings</h2>
+          <p>Tune how your pal looks and moves</p>
+        </div>
 
-    <footer class="footer">
-      <span id="unlock-progress"></span>
-    </footer>
+        <div class="card group">
+          <div class="group-title">Look</div>
+          <div class="field">
+            <div class="field-row"><label for="scale">Size</label><span class="field-val" id="scale-val">1x</span></div>
+            <input type="range" id="scale" min="0.6" max="1.8" step="0.05" />
+          </div>
+          <div class="field">
+            <div class="field-label">Pals on screen</div>
+            <div class="segmented" id="seg-petCount" role="group" aria-label="Pals on screen">
+              <button data-value="1">1</button>
+              <button data-value="2">2</button>
+              <button data-value="3">3</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card group">
+          <div class="group-title">Movement</div>
+          <div class="field">
+            <div class="field-label">Animation style</div>
+            <div class="segmented" id="seg-animationStyle" role="group" aria-label="Animation style">
+              <button data-value="float">Floating</button>
+              <button data-value="walk">Walking</button>
+              <button data-value="bounce">Bouncing</button>
+            </div>
+          </div>
+          <div class="field">
+            <div class="field-row"><label for="walkSpeed">Speed</label><span class="field-val" id="walkSpeed-val">1x</span></div>
+            <input type="range" id="walkSpeed" min="0.4" max="2" step="0.05" />
+          </div>
+          <div class="field">
+            <label class="field-label" for="behavior">Behaviour</label>
+            <select id="behavior">
+              <option value="wander">Wander freely</option>
+              <option value="followCursor">Follow cursor</option>
+              <option value="avoidCursor">Avoid cursor</option>
+              <option value="stationary">Stay put</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="card group">
+          <div class="group-title">Comfort</div>
+          <label class="toggle-row"><span>Sound effects</span><span class="switch small"><input type="checkbox" id="sound" /><span class="slider"></span></span></label>
+          <label class="toggle-row"><span>Reduced motion</span><span class="switch small"><input type="checkbox" id="reducedMotion" /><span class="slider"></span></span></label>
+        </div>
+
+        <button class="soft-btn wide" id="btn-open-options">More settings, outfits &amp; custom models →</button>
+      </section>
+    </main>
+
+    <nav class="nav" aria-label="Sections">
+      <button class="tab active" data-tab="home">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5M5.5 10v9.5a.5.5 0 0 0 .5.5h4v-6h4v6h4a.5.5 0 0 0 .5-.5V10" /></svg>
+        <span>Home</span>
+      </button>
+      <button class="tab" data-tab="characters">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.6" /><path d="M5 20c.8-3.6 3.6-5.6 7-5.6s6.2 2 7 5.6" /></svg>
+        <span>Characters</span>
+      </button>
+      <button class="tab" data-tab="themes">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5c-4.7 0-8.5 3.4-8.5 7.7 0 3.1 2.2 4.1 4 4.1h1.6c.9 0 1.5.8 1.2 1.6-.4 1.1.3 2.1 1.4 2.1 4.7 0 8.8-3.6 8.8-8.5 0-4.2-3.8-7-8.5-7Z" /><circle cx="8" cy="10.5" r="1" /><circle cx="12" cy="8" r="1" /><circle cx="16" cy="10.5" r="1" /></svg>
+        <span>Themes</span>
+      </button>
+      <button class="tab" data-tab="settings">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h9M17 7h3M4 17h3M11 17h9" /><circle cx="15" cy="7" r="2" /><circle cx="9" cy="17" r="2" /></svg>
+        <span>Settings</span>
+      </button>
+    </nav>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
   </div>
-  <script src="../libs/three/three.min.js"></script>
   <script src="../utils/helpers.js"></script>
   <script src="../utils/storage.js"></script>
   <script src="../characters/registry.js"></script>
+  <script src="../characters/accessories.js"></script>
+  <script src="../characters/effects.js"></script>
   <script src="popup.js"></script>
 </body>
 </html>

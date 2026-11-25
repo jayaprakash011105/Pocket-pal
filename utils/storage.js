@@ -25,6 +25,7 @@
       reducedMotion: false,
       accessories: [],
       outfit: 'none',
+      theme: 'classic', // last theme applied from the popup ('custom' once outfit/trail/season are changed by hand)
       animationStyle: 'float', // 'float' | 'walk' | 'bounce'
       windowHopping: true,
       pageAwareness: true,
@@ -34,7 +35,28 @@
       idleAnimations: true, // wave, yawn, sneeze
       petInteractions: true, // pals chase, greet and nap together
       trail: 'sparkles', // 'sparkles' | 'bubbles' | 'hearts' | 'none' (behind floating pals)
-      seasonal: 'auto', // 'auto' | 'off' | 'santa' | 'ghost'
+      seasonal: 'auto', // 'auto' | 'off' | 'santa' (the Snow theme) | 'ghost' (Halloween)
+      // The Christmas theme: a full winter environment with optional extras.
+      christmas: {
+        enabled: false,
+        snowfall: true,
+        accumulation: true,
+        sleigh: true,
+        snowman: true,
+        cleaner: true,
+        decorations: true,
+        sound: true,
+        hat: true, // pals wear a Santa hat
+        pets: true, // show your pals in the Christmas environment (off = just the scenery)
+        deco: { trees: true, lights: true, stars: true, ornaments: true, gifts: true, shootingStars: true, sparkles: true },
+        density: 0.5, // 0.1 - 1
+        speed: 1, // flake fall speed 0.4 - 2
+        wind: 0.3, // 0 - 1
+        accumSpeed: 1, // how fast snow builds up 0.3 - 3
+        cleanerSpeed: 1, // snowplow speed 0.3 - 3
+        volume: 0.5, // 0 - 1
+        quality: 'medium', // 'low' | 'medium' | 'high'
+      },
     },
   };
 

@@ -19,6 +19,9 @@
     { id: 'bowtie', label: 'Bow tie', slot: 'neck', width: 0.34, lift: 0, aspect: 0.62 },
     { id: 'scarf', label: 'Scarf', slot: 'neck', width: 1.0, lift: 0, aspect: 0.5 },
     { id: 'bandana', label: 'Bandana', slot: 'neck', width: 1.0, lift: -0.4, aspect: 0.62 },
+    { id: 'antlers', label: 'Reindeer antlers', slot: 'head', width: 1.2, lift: 0.3, aspect: 0.85 },
+    { id: 'elf-hat', label: 'Elf hat', slot: 'head', width: 1.15, lift: 0.4, aspect: 1.0 },
+    { id: 'candy-scarf', label: 'Candy scarf', slot: 'neck', width: 1.0, lift: 0, aspect: 0.5 },
   ];
 
   // One-tap looks: the outfit sets the accessory list in one go.
@@ -30,6 +33,8 @@
     { id: 'party', label: 'Party time', items: ['party-hat', 'bandana'] },
     { id: 'cozy', label: 'Cozy winter', items: ['beanie', 'scarf'] },
     { id: 'dj', label: 'DJ', items: ['headphones', 'glasses'] },
+    { id: 'reindeer', label: 'Reindeer', items: ['antlers', 'candy-scarf'] },
+    { id: 'elf', label: 'Elf', items: ['elf-hat', 'bowtie'] },
   ];
 
   // Seasonal pieces are worn automatically (never listed in the options).
@@ -200,6 +205,105 @@
         ctx.beginPath();
         ctx.arc(w * x, h * y, w * 0.025, 0, Math.PI * 2);
         ctx.fill();
+      });
+    },
+    antlers(ctx, w, h) {
+      const brown = '#8a5a34';
+      const branch = (flip) => {
+        const X = (x) => (flip ? w - x : x);
+        const stroke = (width, color) => {
+          ctx.lineCap = 'round';
+          ctx.lineJoin = 'round';
+          ctx.strokeStyle = color;
+          ctx.lineWidth = width;
+          ctx.beginPath();
+          ctx.moveTo(X(w * 0.3), h * 0.94);
+          ctx.quadraticCurveTo(X(w * 0.16), h * 0.58, X(w * 0.2), h * 0.12);
+          ctx.moveTo(X(w * 0.2), h * 0.5);
+          ctx.quadraticCurveTo(X(w * 0.1), h * 0.44, X(w * 0.05), h * 0.3);
+          ctx.moveTo(X(w * 0.2), h * 0.3);
+          ctx.quadraticCurveTo(X(w * 0.3), h * 0.22, X(w * 0.34), h * 0.1);
+          ctx.stroke();
+        };
+        stroke(26, 'rgba(40,30,60,0.85)');
+        stroke(16, brown);
+        stroke(5, 'rgba(255,214,160,0.55)');
+      };
+      branch(false);
+      branch(true);
+      ctx.beginPath();
+      ctx.moveTo(w * 0.24, h * 0.96);
+      ctx.quadraticCurveTo(w * 0.5, h * 0.78, w * 0.76, h * 0.96);
+      ctx.lineCap = 'round';
+      ctx.strokeStyle = 'rgba(40,30,60,0.85)';
+      ctx.lineWidth = 16;
+      ctx.stroke();
+      ctx.strokeStyle = '#c0394f';
+      ctx.lineWidth = 8;
+      ctx.stroke();
+    },
+    'elf-hat'(ctx, w, h) {
+      ctx.beginPath();
+      ctx.moveTo(w * 0.1, h * 0.86);
+      ctx.bezierCurveTo(w * 0.1, h * 0.5, w * 0.3, h * 0.22, w * 0.62, h * 0.16);
+      ctx.bezierCurveTo(w * 0.8, h * 0.12, w * 0.92, h * 0.2, w * 0.9, h * 0.32);
+      ctx.bezierCurveTo(w * 0.82, h * 0.3, w * 0.76, h * 0.34, w * 0.78, h * 0.5);
+      ctx.bezierCurveTo(w * 0.82, h * 0.62, w * 0.9, h * 0.72, w * 0.92, h * 0.86);
+      ctx.closePath();
+      outline(ctx, '#2f9e5b');
+      ctx.save();
+      ctx.clip();
+      ctx.fillStyle = 'rgba(255,255,255,0.18)';
+      ctx.beginPath();
+      ctx.ellipse(w * 0.34, h * 0.5, w * 0.1, h * 0.28, 0.5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+      ctx.beginPath();
+      ctx.roundRect ? ctx.roundRect(w * 0.05, h * 0.74, w * 0.9, h * 0.2, 18) : ctx.rect(w * 0.05, h * 0.74, w * 0.9, h * 0.2);
+      outline(ctx, '#d6322f');
+      ctx.fillStyle = '#ffffff';
+      for (let i = 0; i < 6; i += 1) {
+        ctx.beginPath();
+        ctx.arc(w * (0.15 + i * 0.14), h * 0.84, w * 0.022, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.beginPath();
+      ctx.arc(w * 0.9, h * 0.32, w * 0.065, 0, Math.PI * 2);
+      outline(ctx, '#ffd54a');
+    },
+    'candy-scarf'(ctx, w, h) {
+      const body = () => {
+        ctx.beginPath();
+        ctx.moveTo(w * 0.04, h * 0.2);
+        ctx.quadraticCurveTo(w * 0.5, h * 0.5, w * 0.96, h * 0.2);
+        ctx.lineTo(w * 0.96, h * 0.5);
+        ctx.quadraticCurveTo(w * 0.5, h * 0.84, w * 0.04, h * 0.5);
+        ctx.closePath();
+      };
+      const tail = () => path(ctx, [[w * 0.66, h * 0.62], [w * 0.88, h * 0.62], [w * 0.92, h * 1.0], [w * 0.7, h * 1.0]]);
+      [body, tail].forEach((shape) => {
+        shape();
+        ctx.fillStyle = '#ffffff';
+        ctx.fill();
+        ctx.save();
+        shape();
+        ctx.clip();
+        ctx.fillStyle = '#d6322f';
+        for (let i = -4; i < 14; i += 1) {
+          ctx.beginPath();
+          ctx.moveTo(w * (i * 0.1), 0);
+          ctx.lineTo(w * (i * 0.1 + 0.05), 0);
+          ctx.lineTo(w * (i * 0.1 + 0.2), h * 1.1);
+          ctx.lineTo(w * (i * 0.1 + 0.15), h * 1.1);
+          ctx.closePath();
+          ctx.fill();
+        }
+        ctx.restore();
+        shape();
+        ctx.lineWidth = 6;
+        ctx.strokeStyle = 'rgba(40,30,60,0.85)';
+        ctx.lineJoin = 'round';
+        ctx.stroke();
       });
     },
   };

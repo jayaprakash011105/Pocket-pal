@@ -88,8 +88,35 @@
   els.idleAnimations.addEventListener('change', () => save({ settings: { idleAnimations: els.idleAnimations.checked } }));
   els.petInteractions.addEventListener('change', () => save({ settings: { petInteractions: els.petInteractions.checked } }));
   els.petCount.addEventListener('change', () => save({ settings: { petCount: Number(els.petCount.value) } }));
-  els.trail.addEventListener('change', () => save({ settings: { trail: els.trail.value } }));
-  els.seasonal.addEventListener('change', () => save({ settings: { seasonal: els.seasonal.value } }));
+  els.trail.addEventListener('change', () => save({ settings: { trail: els.trail.value, theme: 'custom' } }));
+  // Christmas theme controls: every [data-xmas*] control writes settings.christmas.<key>.
+  const xmasPatch = (patch) => save({ settings: { christmas: patch } });
+  document.querySelectorAll('[data-xmas]').forEach((input) => {
+    input.addEventListener('change', () => {
+      const key = input.dataset.xmas;
+      if (key === 'enabled') {
+        // the full Christmas theme replaces the lighter Snow theme
+        save({ settings: { christmas: { enabled: input.checked }, theme: input.checked ? 'christmas' : 'classic', seasonal: input.checked ? 'off' : 'auto' } });
+      } else {
+        xmasPatch({ [key]: input.checked });
+      }
+    });
+  });
+  document.querySelectorAll('[data-xmas-deco]').forEach((input) => {
+    input.addEventListener('change', () => xmasPatch({ deco: { [input.dataset.xmasDeco]: input.checked } }));
+  });
+  document.querySelectorAll('[data-xmas-range]').forEach((input) => {
+    input.addEventListener('input', () => {
+      const label = document.querySelector(`[data-xmas-val="${input.dataset.xmasRange}"]`);
+      if (label) label.textContent = Number(input.value).toFixed(2).replace(/\.?0+$/, '');
+    });
+    input.addEventListener('change', () => xmasPatch({ [input.dataset.xmasRange]: Number(input.value) }));
+  });
+  document.querySelectorAll('[data-xmas-select]').forEach((select) => {
+    select.addEventListener('change', () => xmasPatch({ [select.dataset.xmasSelect]: select.value }));
+  });
+
+  els.seasonal.addEventListener('change', () => save({ settings: { seasonal: els.seasonal.value, theme: 'custom' } }));
 
   els.btnReset.addEventListener('click', () => {
     if (confirm('Reset all Pocket Pal settings to defaults? Unlocked characters and custom models are kept.')) {
@@ -179,7 +206,7 @@
       chip.className = `chip${state.settings.outfit === outfit.id ? ' active' : ''}`;
       chip.textContent = outfit.label;
       chip.addEventListener('click', () => {
-        save({ settings: { outfit: outfit.id, accessories: outfit.items } });
+        save({ settings: { outfit: outfit.id, accessories: outfit.items, theme: 'custom' } });
       });
       els.outfitChips.appendChild(chip);
     });
@@ -199,7 +226,7 @@
           // One item per slot (head / face / neck).
           next = next.filter((a) => !Accessories.byId[a] || Accessories.byId[a].slot !== piece.slot).concat(piece.id);
         }
-        save({ settings: { accessories: next, outfit: matchingOutfit(next) } });
+        save({ settings: { accessories: next, outfit: matchingOutfit(next), theme: 'custom' } });
       });
       const span = document.createElement('span');
       span.textContent = `${piece.label} (${piece.slot})`;
@@ -332,6 +359,15 @@
     els.petCount.value = String(state.settings.petCount);
     els.trail.value = state.settings.trail;
     els.seasonal.value = state.settings.seasonal;
+    const xmas = state.settings.christmas;
+    document.querySelectorAll('[data-xmas]').forEach((input) => { input.checked = !!xmas[input.dataset.xmas]; });
+    document.querySelectorAll('[data-xmas-deco]').forEach((input) => { input.checked = !!xmas.deco[input.dataset.xmasDeco]; });
+    document.querySelectorAll('[data-xmas-range]').forEach((input) => {
+      input.value = xmas[input.dataset.xmasRange];
+      const label = document.querySelector(`[data-xmas-val="${input.dataset.xmasRange}"]`);
+      if (label) label.textContent = Number(input.value).toFixed(2).replace(/\.?0+$/, '');
+    });
+    document.querySelectorAll('[data-xmas-select]').forEach((select) => { select.value = xmas[select.dataset.xmasSelect]; });
 
     renderCategoryChips();
     renderGallery();
@@ -353,5 +389,8 @@
     state = s;
     manifestData = manifest;
     renderAll();
+    const wanted = location.hash.replace('#', '');
+    const target = wanted && document.querySelector(`.nav-btn[data-section="${wanted}"]`);
+    if (target) target.click();
   }).catch((err) => console.error('Pocket Pal: could not load the roster', err));
 })();

@@ -55,6 +55,13 @@
         "content/effects.js",
         "content/snowfall.js",
         "content/perch.js",
+        "content/christmas/audio.js",
+        "content/christmas/snow.js",
+        "content/christmas/decorations.js",
+        "content/christmas/sleigh.js",
+        "content/christmas/snowman.js",
+        "content/christmas/companions.js",
+        "content/christmas/manager.js",
         "content/minigames.js",
         "content/pet-engine.js",
         "content/content.js"
