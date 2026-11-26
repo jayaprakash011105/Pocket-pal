@@ -1,6 +1,6 @@
 // ChristmasThemeManager: builds the layered canvas stack inside the extension's
 // shadow-DOM stage, wires the independent Christmas modules together through
-// one shared context (layers, the snow heightfield, audio, events, pals) and
+// one shared context (layers, the snow heightfield, events, pals) and
 // shows the small unobtrusive control for the interactive extras.
 (function (global) {
   const PocketPal = global.PocketPal || (global.PocketPal = {});
@@ -110,7 +110,7 @@
       return el;
     }
 
-    // ---- events + audio ------------------------------------------------------------
+    // ---- events ------------------------------------------------------------
 
     function on(name, fn) {
       (listeners[name] || (listeners[name] = new Set())).add(fn);
@@ -128,12 +128,6 @@
       });
     }
 
-    const audioProxy = {
-      play(name, opts) {
-        if (modules.audio && modules.audio.play) modules.audio.play(name, opts);
-      },
-    };
-
     // ---- context shared with every module ------------------------------------------
 
     const accumulation = Christmas.Accumulation.create({ bounds, quality });
@@ -147,7 +141,6 @@
       rand: Math.random,
       createLayer,
       makeHit,
-      audio: audioProxy,
       events: { on, emit },
       pets: options.getPets,
       say: (text) => {
@@ -176,8 +169,6 @@
       }
     }
 
-    // The audio manager comes first so every other module can play sounds.
-    build('audio', () => (Christmas.Audio ? Christmas.Audio.create(ctx) : null));
     build('renderer', () => Christmas.SnowLayerRenderer.create(ctx, accumulation));
     build('snowfall', () => Christmas.Snowfall.create(ctx, accumulation));
     build('decorations', () => (Christmas.Decorations ? Christmas.Decorations.create(ctx) : null));
@@ -263,7 +254,6 @@
     });
     addRow('sweep', '🧹', 'Sweep the snow away', () => {
       accumulation.clearAll(0.92);
-      audioProxy.play('whoosh');
     });
     addRow('reset', '🗑️', 'Remove snowmen', () => {
       if (modules.snowman && modules.snowman.reset) modules.snowman.reset();
@@ -330,7 +320,6 @@
         snowman: s.snowman,
         cleaner: s.cleaner,
         companions: true,
-        audio: s.sound,
       };
       Object.keys(flags).forEach((name) => {
         const m = modules[name];
@@ -364,7 +353,7 @@
       const s = settings();
       // The bank builds itself while "snow builds up" is on; falling flakes add to it on top.
       accumulation.update(dt, { autoBuild: !!s.accumulation, rate: clamp(s.accumSpeed, 0.2, 4) * (s.snowfall ? 0.7 + clamp(s.density, 0.1, 1) * 0.6 : 1) });
-      ['snowfall', 'renderer', 'decorations', 'snowman', 'cleaner', 'sleigh', 'companions', 'audio'].forEach((name) => {
+      ['snowfall', 'renderer', 'decorations', 'snowman', 'cleaner', 'sleigh', 'companions'].forEach((name) => {
         const m = modules[name];
         if (m && m.update) guard(name, () => m.update(dt));
       });

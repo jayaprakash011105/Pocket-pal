@@ -572,7 +572,6 @@
 
     function onPlowClick(e) {
       e.stopPropagation();
-      ctx.audio.play('horn');
       bounceV = -120;
       ctx.events.emit('cleaner:click', { x });
       for (let i = 0; i < 8; i += 1) puffs.push({ x: x - dir * 30 * size(), y: ctx.bounds().height - 30 * size(), vx: -dir * (10 + Math.random() * 20), vy: -20 - Math.random() * 30, life: 0, max: 0.8 });
@@ -728,7 +727,6 @@
           const volume = accumulation.plowAt(bladeX, 15 * sz, 0.1);
           if (volume > 0.4) {
             spawnClods(volume, bladeX, height - 12 * sz, sz);
-            if (clock - lastPass > 0.9) ctx.audio.play('plow', { volume: 0.5 });
           }
           if (clock - lastPass > 1.6) {
             lastPass = clock;

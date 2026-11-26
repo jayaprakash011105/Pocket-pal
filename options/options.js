@@ -22,7 +22,6 @@
     scaleVal: document.getElementById('scale-val'),
     shadowIntensity: document.getElementById('shadowIntensity'),
     shadowVal: document.getElementById('shadow-val'),
-    soundEnabled: document.getElementById('soundEnabled'),
     reducedMotion: document.getElementById('reducedMotion'),
     behavior: document.getElementById('behavior'),
     walkSpeed: document.getElementById('walkSpeed'),
@@ -73,7 +72,6 @@
   els.enabled.addEventListener('change', () => save({ enabled: els.enabled.checked }));
   els.scale.addEventListener('change', () => save({ settings: { scale: Number(els.scale.value) } }));
   els.shadowIntensity.addEventListener('change', () => save({ settings: { shadowIntensity: Number(els.shadowIntensity.value) } }));
-  els.soundEnabled.addEventListener('change', () => save({ settings: { soundEnabled: els.soundEnabled.checked } }));
   els.reducedMotion.addEventListener('change', () => save({ settings: { reducedMotion: els.reducedMotion.checked } }));
   els.behavior.addEventListener('change', () => save({ settings: { behavior: els.behavior.value } }));
   els.walkSpeed.addEventListener('change', () => save({ settings: { walkSpeed: Number(els.walkSpeed.value) } }));
@@ -338,7 +336,6 @@
     els.scaleVal.textContent = `${state.settings.scale}x`;
     els.shadowIntensity.value = state.settings.shadowIntensity;
     els.shadowVal.textContent = state.settings.shadowIntensity;
-    els.soundEnabled.checked = state.settings.soundEnabled;
     els.reducedMotion.checked = state.settings.reducedMotion;
     els.behavior.value = state.settings.behavior;
     els.walkSpeed.value = state.settings.walkSpeed;

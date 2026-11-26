@@ -214,7 +214,6 @@
     const scaleNow = () => (ctx.scale ? ctx.scale() : 1);
     const reduced = () => !!(ctx.reducedMotion && ctx.reducedMotion());
     const qualityMul = () => ({ low: 0.5, medium: 1, high: 1.6 }[(ctx.quality && ctx.quality()) || 'medium'] || 1);
-    const audio = (name, opts) => { if (ctx.audio && ctx.audio.play) ctx.audio.play(name, opts); };
     const emit = (name, data) => { if (ctx.events && ctx.events.emit) ctx.events.emit(name, data); };
 
     let enabled = settings().snowman !== false;
@@ -362,7 +361,6 @@
       selectedId = sm.id;
       const head = stack[2];
       sparkBurst(head.x, head.y - head.r, 26);
-      audio('build');
       floatText(head.x, head.y - head.r * 2.2, 'Snowman built!');
       emit('snowman:progress', { stage: 3 });
       emit('snowman:built', { id: sm.id, x: stack[0].x, y: stack[0].y + stack[0].r * 0.82 });
@@ -378,7 +376,6 @@
       balls = balls.filter((b) => !doomed.has(b.id));
       snowmen = snowmen.filter((s) => s.id !== id);
       if (selectedId === id) selectedId = snowmen.length ? snowmen[snowmen.length - 1].id : null;
-      audio('pop', { volume: 0.7 });
       emit('snowman:removed', { id });
       forceDraw = true;
       refreshBar();
@@ -407,7 +404,6 @@
       const ix = index();
       const p = parts(sm, ix);
       if (p) puff(p.head.x, p.head.y, 5, 80, 50);
-      audio('sparkle', { volume: 0.6 });
       refreshBar();
     }
 
@@ -502,12 +498,10 @@
       const ammo = !!(opts && opts.ammo);
       if (sn.heightAt(pointer.x) < 1.5) {
         floatText(pointer.x, pointer.y - 26, 'No snow here');
-        audio('click', { volume: 0.4 });
         return;
       }
       if (ammo && ammoCount() >= MAX_AMMO_BALLS) {
         floatText(pointer.x, pointer.y - 26, 'Throw your snowballs first');
-        audio('click', { volume: 0.4 });
         return;
       }
       const f = sizeFactor(scaleNow());
@@ -517,7 +511,6 @@
       balls.push(ball);
       roll = { ball, dist: 0, starved: 0, size: 'tiny', pointerId: e.pointerId, ammo };
       hit.setPointerCapture?.(e.pointerId);
-      audio('click', { volume: 0.6 });
     }
 
     function startGrab(ball, e) {
@@ -529,7 +522,6 @@
       ball.bounced = false;
       grab = { ball, offX: pointer.x - ball.x, offY: pointer.y - ball.y, pointerId: e.pointerId };
       hit.setPointerCapture?.(e.pointerId);
-      audio('click', { volume: 0.5 });
     }
 
     function placeStageEvent(ball) {
@@ -549,7 +541,6 @@
           floatText(ball.x, ball.y - 24, 'Roll it a bit longer');
         } else {
           ball.falling = false;
-          audio('thud', { volume: 0.4 });
           floatText(ball.x, ball.y - ball.r - 18, 'Ammo ready: flick it!');
         }
         roll = null;
@@ -564,7 +555,6 @@
       } else {
         ball.falling = false;
         placeStageEvent(ball);
-        audio('thud', { volume: 0.5 });
       }
       roll = null;
     }
@@ -579,7 +569,6 @@
         target.topId = ball.id;
         ball.falling = false;
         const size = classify(ball.r, scaleNow());
-        audio('pop', { volume: 0.6 });
         puff(ball.x, ball.y + ball.r * 0.6, 6, 100, 50);
         if (size === 'medium') {
           emit('snowman:progress', { stage: 2 });
@@ -653,7 +642,7 @@
           if (sm) {
             selectedId = sm.id;
             if (tool) applyTool(sm, tool);
-            else audio('click', { volume: 0.4 });
+            
             refreshBar();
           }
           return;
@@ -745,7 +734,6 @@
         b.title = t.label;
         b.addEventListener('click', () => {
           tool = tool === t.id ? null : t.id;
-          audio('click', { volume: 0.4 });
           refreshBar();
         });
         palette.appendChild(b);
@@ -911,7 +899,6 @@
           if (b.vy > 0 && b.y >= ty) {
             b.y = ty;
             if (b.vy > 240 && !b.bounced) {
-              audio('thud', { volume: clamp(b.vy / 900, 0.25, 0.9) });
               puff(b.x, ty + b.r * 0.8, 6, 140, 70);
               if (!b.locked) b.squash = clamp(b.vy / 1800, 0.05, 0.2);
               b.vy = -b.vy * 0.22;
@@ -991,8 +978,7 @@
       ball.y = restY(ball);
       const size = classify(ball.r, scaleNow());
       if (size !== roll.size) {
-        if (size !== 'tiny' && !roll.ammo) audio('pop', { volume: 0.5 });
-        roll.size = size;
+                roll.size = size;
       }
     }
 
@@ -1071,7 +1057,6 @@
       aim = { ball, x: ball.x, y: ball.y, r: ball.r, rot: ball.rot, samples: [{ t: e.timeStamp > 0 ? e.timeStamp : performance.now(), x: pointer.x, y: pointer.y }], trail: [], pointerId: e.pointerId };
       hit.setPointerCapture?.(e.pointerId);
       puff(ball.x, ball.y + ball.r * 0.6, 3, 70, 50);
-      audio('click', { volume: 0.5 });
     }
 
     // A held ammo ball that wasn't thrown goes back down onto the snow.
@@ -1125,7 +1110,6 @@
         x: last.x, y: last.y, vx: v.vx, vy: v.vy, r: a.r, rot: a.rot, spin: (rnd() - 0.5) * 12 + v.vx * 0.004, bounces: 0, trail: [], acc: 0,
         age: 0, ball: a.ball, taken: a.ball.taken || 0, power: ammoPower(a.r, scaleNow()),
       });
-      audio('whoosh', { volume: clamp(v.speed / 1200, 0.2, 0.9) });
     }
 
     function standingCircles(sm, ix) {
@@ -1177,7 +1161,6 @@
       sm.headOff = true;
       popDecor(sm, ix, dir);
       puff(head.x, head.y, 10, 220, 120);
-      audio('pop', { volume: 0.8 });
     }
 
     function breakSnowman(sm, ix, dir, pw) {
@@ -1205,7 +1188,6 @@
         if (d.arms) [-1, 1].forEach((sg) => spawnDebris('stick', pp.mid.x + sg * pp.mid.r, pp.mid.y - pp.mid.r * 0.3, sg * (80 + rnd() * 120), -(200 + rnd() * 150), pp.mid.r));
         popDecor(sm, ix, dir);
       }
-      audio('pop', { volume: 1 });
       sparkBurst(pp ? pp.mid.x : 0, pp ? pp.mid.y : 0, 18);
       const doomed = new Set(sm.ballIds);
       balls = balls.filter((b) => !doomed.has(b.id));
@@ -1226,7 +1208,6 @@
       const step = advanceDamage(sm.damage);
       sm.damage = step.stage;
       puff(contactX, contactY, 9, 220, 110);
-      audio('thud', { volume: 0.8 });
       if (step.effect === 'wobble') {
         sm.wobble = { t: 0, amp: 0.11 * (0.65 + 0.35 * pw), dir };
         popDecor(sm, ix, dir);
@@ -1260,7 +1241,6 @@
       }
       b.kickVx = clamp(proj.vx * 0.45 * (proj.power || 1), -420, 420) || dir * 160;
       puff(proj.x, proj.y, 6, 180, 90);
-      audio('thud', { volume: 0.5 });
     }
 
     function stepProjectiles(dt, ix) {
@@ -1311,11 +1291,9 @@
               p.spin *= 0.6;
               p.bounces += 1;
               puff(p.x, p.y + p.r, 5, 130, 70);
-              audio('thud', { volume: 0.3 });
             } else {
               puff(p.x, p.y, 8, 200, 100);
               sparkBurst(p.x, p.y, 3);
-              audio('pop', { volume: 0.5 });
               dead = true;
             }
           } else if (p.x < -40 || p.x > B.width + 40 || p.y > B.height + 40) {
@@ -1627,15 +1605,24 @@
       g2.fill();
     }
 
+    // a slow blink every few seconds (0 open .. 1 shut)
+    function blinkAmount(sm) {
+      const c = (time + sm.phase * 2.3) % 4.4;
+      return c < 0.16 ? Math.sin((c / 0.16) * Math.PI) : 0;
+    }
+
     function drawDecor(g2, sm, p, opts) {
       const headOnly = !!(opts && opts.headOnly);
       const skipHead = !!(opts && opts.skipHead);
       const d = sm.decor;
       const { base, mid, head } = p;
-      const dir = Math.abs(sm.look) > 0.25 ? Math.sign(sm.look) : sm.dir;
+      // the nose turns continuously with the head: toward the viewer (short) when centred, long when in profile
+      const nd = clamp(sm.look * 2.4, -1, 1);
+      const dir = Math.abs(nd) > 0.02 ? Math.sign(nd) : sm.dir;
+      const noseLen = 0.34 + 0.66 * Math.abs(nd);
       const hr = head.r;
       const mr = mid.r;
-      const fx = head.x + sm.look * hr * 0.28;
+      const fx = head.x + sm.look * hr * 0.4;
       const sway = Math.sin(time * 1.6 + sm.phase);
       const coal = '#2b2b36';
 
@@ -1739,8 +1726,19 @@
         [-1, 1].forEach((sg) => {
           const ex = fx + sg * spread;
           const ey = head.y - hr * 0.16;
-          dot(g2, ex, ey, hr * 0.115, coal);
-          dot(g2, ex - hr * 0.035, ey - hr * 0.04, hr * 0.032, 'rgba(255,255,255,0.85)');
+          const lid = blinkAmount(sm);
+          if (lid > 0.55) {
+            g2.strokeStyle = coal;
+            g2.lineCap = 'round';
+            g2.lineWidth = Math.max(1.5, hr * 0.055);
+            g2.beginPath();
+            g2.moveTo(ex - hr * 0.1, ey);
+            g2.lineTo(ex + hr * 0.1, ey);
+            g2.stroke();
+          } else {
+            dot(g2, ex, ey, hr * 0.115 * (1 - lid * 0.6), coal);
+            dot(g2, ex - hr * 0.035, ey - hr * 0.04, hr * 0.032, 'rgba(255,255,255,0.85)');
+          }
         });
       }
       if (d.smile && !skipHead) {
@@ -1754,7 +1752,7 @@
       if (d.nose && !skipHead) {
         const nx = fx + dir * hr * 0.06;
         const ny = head.y + hr * 0.06;
-        const len = hr * 0.66;
+        const len = hr * 0.66 * noseLen;
         g2.fillStyle = '#ff8a2a';
         g2.beginPath();
         g2.moveTo(nx, ny - hr * 0.11);
@@ -1855,6 +1853,14 @@
         g2.scale(1 + sq, 1 - sq);
         g2.translate(-root.x, -gy);
       }
+      if (sm && !isHead && !sm.wobble && root.id === sm.ballIds[0]) {
+        // alive: a faint lean toward where it is looking, plus a slow breath
+        const gy = root.y + root.r * 0.82;
+        g2.translate(root.x, gy);
+        g2.rotate(sm.look * 0.018 + Math.sin(time * 1.1 + sm.phase) * 0.004);
+        g2.scale(1, 1 + Math.sin(time * 1.7 + sm.phase) * 0.006);
+        g2.translate(-root.x, -gy);
+      }
       if (sm && sm.cel < 1 && !reduced()) {
         const t = sm.cel;
         const bounce = -Math.abs(Math.sin(t * Math.PI * 3)) * 11 * (1 - t);
@@ -1872,8 +1878,6 @@
       if (sm) {
         const p = parts(sm, ix);
         if (p) {
-          const targetLook = pointer.inside || active ? clamp((pointer.x - p.head.x) / 260, -1, 1) : 0;
-          sm.look += (targetLook - sm.look) * 0.08;
           if (isHead) drawDecor(g2, sm, p, { headOnly: true });
           else drawDecor(g2, sm, p, { skipHead: sm.headOff });
         }
@@ -2044,6 +2048,34 @@
 
     // ---- Public API ---------------------------------------------------------------------------------
 
+    // Snowmen look about all the time: slowly sweeping left and right, or following the pointer while playing.
+    let lifeAcc = 0;
+    let lifeFrame = false;
+    function stepLife(dt, ix) {
+      lifeFrame = false;
+      if (!snowmen.length) return;
+      snowmen.forEach((sm) => {
+        const p = parts(sm, ix);
+        if (!p) return;
+        let target;
+        let rate;
+        if (active && pointer.inside) {
+          target = clamp((pointer.x - p.head.x) / 260, -1, 1);
+          rate = 6;
+        } else {
+          const t = time + sm.phase * 7;
+          target = clamp(Math.sin(t * 0.78) * 0.9 + Math.sin(t * 0.31 + 1.7) * 0.3, -1, 1);
+          rate = 2.2;
+        }
+        sm.look += (target - sm.look) * Math.min(1, dt * rate);
+      });
+      lifeAcc += dt;
+      if (lifeAcc >= 1 / 30) {
+        lifeAcc = 0;
+        lifeFrame = true;
+      }
+    }
+
     function update(dt) {
       if (!enabled || disposed) return;
       time += dt;
@@ -2058,6 +2090,7 @@
       stepChunks(dt);
       stepEffects(dt);
       stepReturns(dt);
+      stepLife(dt, ix);
       if (hintFlash) {
         hintFlash.t -= dt;
         if (hintFlash.t <= 0) {
@@ -2074,7 +2107,7 @@
       }
 
       const busy = projectiles.length > 0 || chunks.length > 0 || debris.length > 0 || !!aim;
-      const animating = moved || busy || particles.length > 0 || floaters.length > 0 || active || snowmen.some((s) => s.cel < 1 || s.wobble);
+      const animating = moved || lifeFrame || busy || particles.length > 0 || floaters.length > 0 || active || snowmen.some((s) => s.cel < 1 || s.wobble);
       if (animating || forceDraw) {
         forceDraw = false;
         if (balls.length || busy || particles.length || floaters.length || drewContent) draw();
@@ -2150,7 +2183,7 @@
         return {
           zoneH,
           balls: balls.map((b) => ({ id: b.id, x: b.x, y: b.y, r: b.r, size: classify(b.r, scaleNow()), supportId: b.supportId, topId: b.topId, locked: b.locked, snowmanId: b.snowmanId, ammo: !!b.ammo, taken: Math.round(b.taken || 0) })),
-          snowmen: snowmen.map((s) => ({ id: s.id, decor: { ...s.decor }, ballIds: s.ballIds.slice(), damage: s.damage, headOff: s.headOff })),
+          snowmen: snowmen.map((s) => ({ id: s.id, look: s.look, decor: { ...s.decor }, ballIds: s.ballIds.slice(), damage: s.damage, headOff: s.headOff })),
           projectiles: projectiles.length,
           projInfo: projectiles.map((q) => ({ x: Math.round(q.x), y: Math.round(q.y), vx: Math.round(q.vx), vy: Math.round(q.vy) })),
           debris: debris.length,

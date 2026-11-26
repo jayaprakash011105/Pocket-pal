@@ -18,7 +18,6 @@
       walkSpeed: 1.0,
       animSpeed: 1.0,
       behavior: 'wander', // 'wander' | 'followCursor' | 'avoidCursor' | 'stationary'
-      soundEnabled: true,
       shadowIntensity: 0.5,
       autoSleepMinutes: 5,
       interactionSensitivity: 1.0,
@@ -45,7 +44,6 @@
         snowman: true,
         cleaner: true,
         decorations: true,
-        sound: true,
         hat: true, // pals wear a Santa hat
         pets: true, // show your pals in the Christmas environment (off = just the scenery)
         deco: { trees: true, lights: true, stars: true, ornaments: true, gifts: true, shootingStars: true, sparkles: true },
@@ -54,7 +52,6 @@
         wind: 0.3, // 0 - 1
         accumSpeed: 1, // how fast snow builds up 0.3 - 3
         cleanerSpeed: 1, // snowplow speed 0.3 - 3
-        volume: 0.5, // 0 - 1
         quality: 'medium', // 'low' | 'medium' | 'high'
       },
     },

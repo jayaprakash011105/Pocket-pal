@@ -401,7 +401,6 @@
     $('walkSpeed').value = s.walkSpeed;
     $('walkSpeed-val').textContent = `${Number(s.walkSpeed).toFixed(2).replace(/\.?0+$/, '')}x`;
     $('behavior').value = s.behavior;
-    $('sound').checked = s.soundEnabled;
     $('reducedMotion').checked = s.reducedMotion;
     syncSegmented('seg-animationStyle', s.animationStyle);
     syncSegmented('seg-petCount', s.petCount);
@@ -418,7 +417,6 @@
     Storage.set({ settings: { walkSpeed: Number($('walkSpeed').value) } });
   });
   $('behavior').addEventListener('change', () => Storage.set({ settings: { behavior: $('behavior').value } }));
-  $('sound').addEventListener('change', () => Storage.set({ settings: { soundEnabled: $('sound').checked } }));
   $('reducedMotion').addEventListener('change', () => Storage.set({ settings: { reducedMotion: $('reducedMotion').checked } }));
   $('enabled-toggle').addEventListener('change', () => Storage.set({ enabled: $('enabled-toggle').checked }));
   $('btn-open-options').addEventListener('click', () => chrome.runtime.openOptionsPage());

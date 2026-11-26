@@ -140,25 +140,6 @@
     pet.bubbleTimeout = setTimeout(() => pet.bubble.classList.remove('pp-visible'), BUBBLE_MS);
   }
 
-  let audioCtx = null;
-  function blip(freq) {
-    if (!state || !state.settings.soundEnabled) return;
-    try {
-      audioCtx = audioCtx || new AudioContext();
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.type = 'sine';
-      osc.frequency.value = freq;
-      gain.gain.value = 0.04;
-      gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.1);
-      osc.connect(gain).connect(audioCtx.destination);
-      osc.start();
-      osc.stop(audioCtx.currentTime + 0.1);
-    } catch (e) {
-      // Audio is optional; ignore autoplay/context failures.
-    }
-  }
-
   function positionBubble(pet) {
     pet.bubble.style.left = `${pet.brain.body.x}px`;
     pet.bubble.style.top = `${pet.brain.body.y - 120 * state.settings.scale}px`;
@@ -238,7 +219,6 @@
         stage,
         getScale: () => state.settings.scale,
         getBounds: () => ({ width: engine.width, height: engine.height }),
-        onScore: () => blip(740),
       });
     }
     if (ballGame.active) {
@@ -326,17 +306,14 @@
       pet.interactions = Interactions.createInteractions(hitbox, brain, {
         onSingleClick: () => {
           recordInteraction();
-          blip(660);
           brain.jump();
         },
         onDoubleClick: () => {
           recordInteraction();
-          blip(880);
           brain.special('dance');
         },
         onDragStart: () => {
           recordInteraction();
-          blip(520);
           closeMenu();
           brain.setDragging(true);
         },

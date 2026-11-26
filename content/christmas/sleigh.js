@@ -859,7 +859,6 @@
       lastPos = null;
       ensureSleighLayer();
       createHit();
-      if (ctx.audio && ctx.audio.play) ctx.audio.play('sleighbells');
       ctx.events.emit('sleigh:pass', { x: startX, y: baseY, dir });
     }
 
@@ -1162,7 +1161,6 @@
       rearT = 0;
       ensureSleighLayer();
       createHit();
-      if (ctx.audio && ctx.audio.play) ctx.audio.play('sleighbells');
       ctx.events.emit('sleigh:pass', { x: xStart, y: -80 * u, dir });
     }
 
@@ -1363,7 +1361,6 @@
       const u = call.u;
       for (let k = 0; k < (isSleigh ? 10 : 7); k += 1) addSpray(x + rand(-16, 16) * u, surf, call.dir, 1.4);
       if (isSleigh) {
-        if (ctx.audio && ctx.audio.play) ctx.audio.play('thud');
         ctx.events.emit('sleigh:pass', { x: call.xL, y: surf, dir: call.dir });
       }
     }
@@ -1414,7 +1411,6 @@
             g.y = surface - g.size * 0.43 + 3;
             g.vr = 0;
             puff(g.x, surface, 9);
-            if (ctx.audio && ctx.audio.play) ctx.audio.play('gift');
             ctx.events.emit('gift:land', { x: g.x });
           }
         } else {
@@ -1484,7 +1480,6 @@
       if ((!pass && !call) || !lastPos) return;
       rearT = REAR_SECONDS;
       burst(lastPos.x, lastPos.y - 10 * cur.u, 36);
-      if (ctx.audio && ctx.audio.play) ctx.audio.play('jingle');
       const count = 2 + Math.floor(ctx.rand() * 3);
       for (let i = 0; i < count; i += 1) dropQueue.push(0.12 * (i + 1));
       ctx.events.emit('sleigh:click', { x: lastPos.x, y: lastPos.y });
